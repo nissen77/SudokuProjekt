@@ -10,9 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //QLineEdit().setInputMask("1-9");
-
-
 
     fields[0][0] = ui->field_0_0;
     fields[0][1] = ui->field_0_1;
