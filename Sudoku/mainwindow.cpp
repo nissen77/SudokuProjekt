@@ -113,9 +113,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 }
-void MainWindow::test(){
-    fields[0][0]->setText("1");
-}
 
 MainWindow::~MainWindow()
 {
@@ -126,7 +123,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_closebtn_clicked()
 {
-    //fields[0][0]->setText("1");
-
-    test();
+    close();
 }

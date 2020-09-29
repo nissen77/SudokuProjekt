@@ -14,7 +14,6 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QLineEdit *fields[9][9];
-    void test();
 
 public:
     MainWindow(QWidget *parent = nullptr);
