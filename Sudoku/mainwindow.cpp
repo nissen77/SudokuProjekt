@@ -111,7 +111,43 @@ MainWindow::MainWindow(QWidget *parent)
     fields[0][0]->setText("1");
     fields[0][0]->setReadOnly(1);
 
+}
 
+bool MainWindow::pruefeFeld(int x, int y, int n){
+    for(int i = 0; i < 9; i++){
+        if(n == fields[y][i]->text().toInt()){
+            return false;
+        }
+        if(n == fields[i][x]->text().toInt()){
+            return false;
+        }
+    }
+
+    int xq = (x/3)*3;
+    int yq = (y/3)*3;
+
+
+    for (int i = yq; i < yq+3; i++) {
+        for (int j = xq; j < xq+3; j++) {
+            if(n == fields[i][j]->text().toInt()){
+                return false;
+            }
+        }
+    }
+
+    return true;
+
+}
+
+bool MainWindow::pruefSudoku(){
+    for(int y = 0; y < 9; y++){
+        for(int x = 0; x < 9; x++){
+            if(!pruefeFeld(y,x,fields[y][x]->text().toInt())){
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 MainWindow::~MainWindow()

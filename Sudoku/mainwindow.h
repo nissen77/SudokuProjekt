@@ -14,6 +14,9 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QLineEdit *fields[9][9];
+    int zahlen [9][9];
+    bool pruefeFeld(int x, int y, int n);
+    bool pruefSudoku();
 
 public:
     MainWindow(QWidget *parent = nullptr);
