@@ -111,38 +111,67 @@ MainWindow::MainWindow(QWidget *parent)
     fields[0][0]->setText("1");
     fields[0][0]->setReadOnly(1);
 
+    int solved[9][9] = 	{{8, 6, 3,  9, 2, 5,  7, 4, 1} ,
+                         {4, 1, 2,  7, 8, 6,  3, 5, 9} ,
+                         {7, 5, 9,  4, 1, 3,  2, 8, 6 },
+
+                         {9, 7, 1,  2, 6, 4,  8, 3, 5 },
+                         {3, 4, 6,  8, 5, 7,  9, 1, 2 },
+                         {2, 8, 5,  3, 9, 1,  4, 6, 7 },
+
+                         {1, 9, 8,  6, 3, 2,  5, 7, 4 },
+                         {5, 2, 4,  1, 7, 8,  6, 9, 3 },
+                         {6, 3, 7,  5, 4, 9,  1, 2, 8}};
+
+    int solved2[9][9] = { { 3, 1, 6, 5, 7, 8, 4, 9, 2 },
+                          { 5, 2, 9, 1, 3, 4, 7, 6, 8 },
+                          { 4, 8, 7, 6, 2, 9, 5, 3, 1 },
+                          { 2, 6, 3, 4, 1, 5, 9, 8, 7 },
+                          { 9, 7, 4, 8, 6, 3, 1, 2, 5 },
+                          { 8, 5, 1, 7, 9, 2, 6, 4, 3 },
+                          { 1, 3, 8, 9, 4, 7, 2, 5, 6 },
+                          { 6, 9, 2, 3, 5, 1, 8, 7, 4 },
+                          { 7, 4, 5, 2, 8, 6, 3, 1, 9 } };
+
+
+    for (int i=0;i<9;i++) {
+        for (int j=0;j<9;j++) {
+            fields[i][j] ->setText(QString::number(solved2[i][j]));
+        }
+    }
 }
 
 bool MainWindow::pruefeFeld(int x, int y, int n){
     for(int i = 0; i < 9; i++){
-        if(n == fields[y][i]->text().toInt()){
+        if(fields[y][i]->text().toInt() == n &&  x != i){
             return false;
         }
-        if(n == fields[i][x]->text().toInt()){
+        if(fields[i][x]->text().toInt() == n && y != i){
             return false;
         }
     }
 
+    int px = x%3;
+    int py = y%3;
     int xq = (x/3)*3;
     int yq = (y/3)*3;
 
 
-    for (int i = yq; i < yq+3; i++) {
-        for (int j = xq; j < xq+3; j++) {
-            if(n == fields[i][j]->text().toInt()){
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if(n == fields[yq+i][xq+j]->text().toInt() && i!=py && j != px){
                 return false;
             }
         }
     }
-
     return true;
 
 }
 
 bool MainWindow::pruefSudoku(){
-    for(int y = 0; y < 9; y++){
-        for(int x = 0; x < 9; x++){
-            if(!pruefeFeld(y,x,fields[y][x]->text().toInt())){
+    for(int x = 0; x < 9; x++){
+        for(int y = 0; y < 9; y++){
+            if(pruefeFeld(x,y,fields[y][x]->text().toInt()) == 0){
                 return false;
             }
         }
@@ -159,5 +188,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_closebtn_clicked()
 {
-    close();
+
+    printf("testsudoku %d\n",pruefSudoku());
+    //close();
 }
