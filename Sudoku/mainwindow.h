@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow
     bool pruefSudoku();
     void solveSudoku();
     void getValues();
+    void createSudoku();
     bool fertig = false;
 
 public:
@@ -28,6 +29,10 @@ public:
 
 private slots:
     void on_closebtn_clicked();
+
+    void on_solve_clicked();
+
+    void on_check_clicked();
 
 private:
     Ui::MainWindow *ui;

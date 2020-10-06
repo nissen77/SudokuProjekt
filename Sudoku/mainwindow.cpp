@@ -108,49 +108,9 @@ MainWindow::MainWindow(QWidget *parent)
             fields[i][j]->setValidator(validator);
         }
     }
-    fields[0][0]->setText("1");
-    fields[0][0]->setReadOnly(1);
-
-    int solved[9][9] = 	{{8, 6, 3,  9, 2, 5,  7, 4, 1} ,
-                         {4, 1, 2,  7, 8, 6,  3, 5, 9} ,
-                         {7, 5, 9,  4, 1, 3,  2, 8, 6 },
-
-                         {9, 7, 1,  2, 6, 4,  8, 3, 5 },
-                         {3, 4, 6,  8, 5, 7,  9, 1, 2 },
-                         {2, 8, 5,  3, 9, 1,  4, 6, 7 },
-
-                         {1, 9, 8,  6, 3, 2,  5, 7, 4 },
-                         {5, 2, 4,  1, 7, 8,  6, 9, 3 },
-                         {6, 3, 7,  5, 4, 9,  1, 2, 8}};
-
-    int solved2[9][9] = { { 3, 1, 6, 5, 7, 8, 4, 9, 2 },
-                          { 5, 2, 9, 1, 3, 4, 7, 6, 8 },
-                          { 4, 8, 7, 6, 2, 9, 5, 3, 1 },
-                          { 2, 6, 3, 4, 1, 5, 9, 8, 7 },
-                          { 9, 7, 4, 8, 6, 3, 1, 2, 5 },
-                          { 8, 5, 1, 7, 9, 2, 6, 4, 3 },
-                          { 1, 3, 8, 9, 4, 7, 2, 5, 6 },
-                          { 6, 9, 2, 3, 5, 1, 8, 7, 4 },
-                          { 7, 4, 5, 2, 8, 6, 3, 1, 9 } };
-
-    int unsolved[9][9]= {{4,0,3,0,2,0,6,0,0},
-                       {9,0,0,3,0,5,0,0,1},
-                       {0,0,1,8,0,6,4,0,0},
-                       {0,0,8,1,0,2,9,0,0},
-                       {7,0,0,0,0,0,0,0,8},
-                       {0,0,6,7,0,8,2,0,0},
-                       {0,0,2,6,0,9,5,0,0},
-                       {8,0,0,2,0,3,0,0,9},
-                       {0,0,5,0,1,0,3,0,0}};
-
-
-    for (int i=0;i<9;i++) {
-        for (int j=0;j<9;j++) {
-            fields[i][j] ->setText(QString::number(unsolved[i][j]));
-        }
-    }
-
+    //fields[0][0]->setReadOnly(1);
     getValues();
+    createSudoku();
 }
 
 bool MainWindow::pruefeFeld(int x, int y, int n){
@@ -192,8 +152,6 @@ bool MainWindow::pruefSudoku(){
     return true;
 }
 
-
-
 void MainWindow::solveSudoku(){
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
@@ -228,6 +186,38 @@ void MainWindow::getValues(){
 }
 
 
+void MainWindow::createSudoku(){
+    int x, y, n;
+    for(int i = 0; i < 20; i++){
+        x = (rand()%8)+1;
+        y = (rand()%8)+1;
+        n = (rand()%9)+1;
+        if(pruefeFeld(x, y, n)){
+            zahlen[y][x] = n;
+        }else i--;
+    }
+
+    solveSudoku();
+    getValues();
+    for(int i = 0; i < 50; i++){
+        x = (rand()%8)+1;
+        y = (rand()%8)+1;
+        if(zahlen[y][x] != 0){
+            zahlen[y][x] = 0;
+        }else i--;
+    }
+
+    for(int y = 0; y < 9; y++) {
+        for(int x = 0; x < 9; x++) {
+            fields[y][x] ->setText(QString::number(zahlen[y][x]));
+            if(zahlen[y][x] != 0){
+                fields[y][x]->setReadOnly(1);
+            }
+        }
+    }
+}
+
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -237,7 +227,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_closebtn_clicked()
 {
+    close();
+}
+
+void MainWindow::on_solve_clicked()
+{
+    fertig = false;
+    getValues();
     solveSudoku();
-    printf("testsudoku %d\n",pruefSudoku());
-    //close();
+}
+
+void MainWindow::on_check_clicked()
+{
+
 }
