@@ -239,5 +239,5 @@ void MainWindow::on_solve_clicked()
 
 void MainWindow::on_check_clicked()
 {
-    printf("\n%d\n",pruefSudoku());
+    printf("%d\n",pruefSudoku());
 }
