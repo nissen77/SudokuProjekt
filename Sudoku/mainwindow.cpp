@@ -133,20 +133,32 @@ MainWindow::MainWindow(QWidget *parent)
                           { 6, 9, 2, 3, 5, 1, 8, 7, 4 },
                           { 7, 4, 5, 2, 8, 6, 3, 1, 9 } };
 
+    int unsolved[9][9]= {{4,0,3,0,2,0,6,0,0},
+                       {9,0,0,3,0,5,0,0,1},
+                       {0,0,1,8,0,6,4,0,0},
+                       {0,0,8,1,0,2,9,0,0},
+                       {7,0,0,0,0,0,0,0,8},
+                       {0,0,6,7,0,8,2,0,0},
+                       {0,0,2,6,0,9,5,0,0},
+                       {8,0,0,2,0,3,0,0,9},
+                       {0,0,5,0,1,0,3,0,0}};
+
 
     for (int i=0;i<9;i++) {
         for (int j=0;j<9;j++) {
-            fields[i][j] ->setText(QString::number(solved2[i][j]));
+            fields[i][j] ->setText(QString::number(unsolved[i][j]));
         }
     }
+
+    getValues();
 }
 
 bool MainWindow::pruefeFeld(int x, int y, int n){
     for(int i = 0; i < 9; i++){
-        if(fields[y][i]->text().toInt() == n &&  x != i){
+        if(zahlen[y][i] == n &&  x != i){
             return false;
         }
-        if(fields[i][x]->text().toInt() == n && y != i){
+        if(zahlen[i][x]== n && y != i){
             return false;
         }
     }
@@ -159,7 +171,7 @@ bool MainWindow::pruefeFeld(int x, int y, int n){
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            if(n == fields[yq+i][xq+j]->text().toInt() && i!=py && j != px){
+            if(n == zahlen[yq+i][xq+j] && i!=py && j != px){
                 return false;
             }
         }
@@ -169,15 +181,52 @@ bool MainWindow::pruefeFeld(int x, int y, int n){
 }
 
 bool MainWindow::pruefSudoku(){
-    for(int x = 0; x < 9; x++){
-        for(int y = 0; y < 9; y++){
-            if(pruefeFeld(x,y,fields[y][x]->text().toInt()) == 0){
+    getValues();
+    for(int y = 0; y < 9; y++){
+        for(int x = 0; x < 9; x++){
+            if(pruefeFeld(x, y, zahlen[y][x]) == 0){
                 return false;
             }
         }
     }
     return true;
 }
+
+
+
+void MainWindow::solveSudoku(){
+    for(int y = 0; y < 9; y++) {
+        for(int x = 0; x < 9; x++) {
+            if(zahlen[y][x] == 0){
+                for(int n = 1; n < 10 ;n++) {
+                    if(pruefeFeld(x, y, n) && !fertig){
+                        zahlen[y][x] = n;
+                        solveSudoku();
+                        zahlen[y][x] = 0;
+                    }
+                }
+                return;
+            }
+        }
+    }
+
+    for(int y = 0; y < 9; y++) {
+        for(int x = 0; x < 9; x++) {
+            fields[y][x] ->setText(QString::number(zahlen[y][x]));
+        }
+    }
+    fertig = true;
+}
+
+
+void MainWindow::getValues(){
+    for (int i=0;i<9;i++) {
+        for (int j=0;j<9;j++) {
+            zahlen[i][j] = fields[i][j]->text().toInt();
+        }
+    }
+}
+
 
 MainWindow::~MainWindow()
 {
@@ -188,7 +237,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_closebtn_clicked()
 {
-
+    solveSudoku();
     printf("testsudoku %d\n",pruefSudoku());
     //close();
 }

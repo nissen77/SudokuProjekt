@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <qlineedit.h>
 #include <iostream>
+
 using namespace std;
 
 QT_BEGIN_NAMESPACE
@@ -17,6 +18,9 @@ class MainWindow : public QMainWindow
     int zahlen [9][9];
     bool pruefeFeld(int x, int y, int n);
     bool pruefSudoku();
+    void solveSudoku();
+    void getValues();
+    bool fertig = false;
 
 public:
     MainWindow(QWidget *parent = nullptr);
