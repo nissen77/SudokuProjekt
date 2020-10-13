@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QRegularExpressionValidator>
-
+#include <windows.h>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    popup = new PopUp();
 
     fields[0][0] = ui->field_0_0;
     fields[0][1] = ui->field_0_1;
@@ -110,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     //fields[0][0]->setReadOnly(1);
     getValues();
-    createSudoku();
+    createSudoku(50);
 }
 
 bool MainWindow::pruefeFeld(int x, int y, int n){
@@ -173,9 +174,36 @@ void MainWindow::solveSudoku(){
             fields[y][x] ->setText(QString::number(zahlen[y][x]));
         }
     }
+
     fertig = true;
 }
 
+void MainWindow::solveSudokuVisual(){
+    for(int y = 0; y < 9; y++) {
+        for(int x = 0; x < 9; x++) {
+            if(zahlen[y][x] == 0){
+                for(int n = 1; n < 10 ;n++) {
+                    if(pruefeFeld(x, y, n) && !fertig){
+                        zahlen[y][x] = n;
+                        Sleep(250);
+                        fields[y][x]->setStyleSheet("*{color : blue; font-weight: 900; font-size:15px;}");
+                        fields[y][x] ->setText(QString::number(zahlen[y][x]));
+                        qApp->processEvents();
+                        fields[y][x]->setStyleSheet("*{color:black; font-weight: normal; font-size:medium;}");
+                        solveSudokuVisual();
+                        zahlen[y][x] = 0;
+                        if(!fertig){
+                            fields[y][x] ->setText("0");
+                            qApp->processEvents();
+                        }
+                    }
+                }
+                return;
+            }
+        }
+    }
+    fertig = true;
+}
 
 void MainWindow::getValues(){
     for (int i=0;i<9;i++) {
@@ -186,11 +214,13 @@ void MainWindow::getValues(){
 }
 
 
-void MainWindow::createSudoku(){
+void MainWindow::createSudoku(int difficulty){
+    clearZahlen();
+
     int x, y, n;
-    for(int i = 0; i < 20; i++){
-        x = (rand()%8)+1;
-        y = (rand()%8)+1;
+    for(int i = 0; i < 11; i++){
+        x = (rand()%9);
+        y = (rand()%9);
         n = (rand()%9)+1;
         if(pruefeFeld(x, y, n)){
             zahlen[y][x] = n;
@@ -199,11 +229,12 @@ void MainWindow::createSudoku(){
 
     solveSudoku();
     getValues();
-    for(int i = 0; i < 50; i++){
-        x = (rand()%8)+1;
-        y = (rand()%8)+1;
+    for(int i = 0; i < difficulty; i++){
+        x = (rand()%9);
+        y = (rand()%9);
         if(zahlen[y][x] != 0){
             zahlen[y][x] = 0;
+            fields[y][x]->setStyleSheet("*{font-weight: normal;}");
         }else i--;
     }
 
@@ -211,6 +242,7 @@ void MainWindow::createSudoku(){
         for(int x = 0; x < 9; x++) {
             fields[y][x] ->setText(QString::number(zahlen[y][x]));
             if(zahlen[y][x] != 0){
+                fields[y][x]->setStyleSheet("*{font-weight: bold;}");
                 fields[y][x]->setReadOnly(1);
             }
         }
@@ -239,5 +271,50 @@ void MainWindow::on_solve_clicked()
 
 void MainWindow::on_check_clicked()
 {
-    printf("%d\n",pruefSudoku());
+    if(pruefSudoku()){
+        popup->setPopUpText("Gelöst");
+    }else{
+        popup->setPopUpText("Nicht Gelöst");
+    }
+    popup->show();
+}
+
+
+void MainWindow::on_leicht_clicked()
+{
+    fertig = false;
+    createSudoku(48);
+}
+
+void MainWindow::on_normal_clicked()
+{
+    fertig = false;
+    createSudoku(52);
+}
+
+void MainWindow::on_schwer_clicked()
+{
+    fertig = false;
+    createSudoku(56);
+}
+
+void MainWindow::on_sehrschwer_clicked()
+{
+    fertig = false;
+    createSudoku(60);
+}
+
+void MainWindow::on_solvevisual_clicked()
+{
+    fertig = false;
+    getValues();
+    solveSudokuVisual();
+}
+
+void MainWindow::clearZahlen(){
+    for(int i = 0; i < 9; i++){
+        for(int j = 0; j < 9; j++){
+            zahlen[i][j] = 0;
+        }
+    }
 }

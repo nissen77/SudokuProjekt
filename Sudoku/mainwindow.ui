@@ -1112,6 +1112,71 @@
      <string>Check</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="leicht">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>120</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>leicht</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="normal">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>160</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>normal</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="schwer">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>200</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>schwer</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sehrschwer">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>240</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>sehr schwer</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="solvevisual">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>450</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Solve Visual</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

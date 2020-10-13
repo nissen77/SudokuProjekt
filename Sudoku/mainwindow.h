@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <qlineedit.h>
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include "popup.h"
 
 using namespace std;
 
@@ -19,8 +22,10 @@ class MainWindow : public QMainWindow
     bool pruefeFeld(int x, int y, int n);
     bool pruefSudoku();
     void solveSudoku();
+    void solveSudokuVisual();
     void getValues();
-    void createSudoku();
+    void createSudoku(int difficulty);
+    void clearZahlen();
     bool fertig = false;
 
 public:
@@ -34,7 +39,18 @@ private slots:
 
     void on_check_clicked();
 
+    void on_leicht_clicked();
+
+    void on_normal_clicked();
+
+    void on_schwer_clicked();
+
+    void on_sehrschwer_clicked();
+
+    void on_solvevisual_clicked();
+
 private:
     Ui::MainWindow *ui;
+    PopUp *popup;
 };
 #endif // MAINWINDOW_H
