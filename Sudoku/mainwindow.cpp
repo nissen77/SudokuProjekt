@@ -10,9 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    popup = new PopUp();
+    popup = new PopUp();              // erzeugen des popup window objekts
 
-    fields[0][0] = ui->field_0_0;
+    fields[0][0] = ui->field_0_0;     // weist dem array fields die ui pointer zu
     fields[0][1] = ui->field_0_1;
     fields[0][2] = ui->field_0_2;
     fields[0][3] = ui->field_0_3;
@@ -102,19 +102,18 @@ MainWindow::MainWindow(QWidget *parent)
     fields[8][7] = ui->field_8_7;
     fields[8][8] = ui->field_8_8;
 
-    QRegExp re("[1-9]");
+    QRegExp re("[1-9]");                //Regex damit in die ui felder nur zahlen von 1-9 eingetragen werden koennen
     QRegExpValidator *validator = new QRegExpValidator(re, this);
     for (int i=0;i<9;i++) {
         for (int j=0;j<9;j++) {
             fields[i][j]->setValidator(validator);
         }
     }
-    //fields[0][0]->setReadOnly(1);
     getValues();
     createSudoku(50);
 }
 
-bool MainWindow::pruefeFeld(int x, int y, int n){
+bool MainWindow::pruefeFeld(int x, int y, int n){   //ueberprueft ob in ein bestimmtes feld eine bestimmte zahl geschrieben werden kann
     for(int i = 0; i < 9; i++){
         if(zahlen[y][i] == n &&  x != i){
             return false;
@@ -141,7 +140,7 @@ bool MainWindow::pruefeFeld(int x, int y, int n){
 
 }
 
-bool MainWindow::pruefSudoku(){
+bool MainWindow::pruefSudoku(){       //prueft ob das sudoku richtig geloest wurde
     getValues();
     for(int y = 0; y < 9; y++){
         for(int x = 0; x < 9; x++){
@@ -153,7 +152,7 @@ bool MainWindow::pruefSudoku(){
     return true;
 }
 
-void MainWindow::solveSudoku(){
+void MainWindow::solveSudoku(){        //loest das sudoku
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             if(zahlen[y][x] == 0){
@@ -178,7 +177,7 @@ void MainWindow::solveSudoku(){
     fertig = true;
 }
 
-void MainWindow::solveSudokuVisual(){
+void MainWindow::solveSudokuVisual(){       //loest das sudoku sichtbar fuer die ui
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             if(zahlen[y][x] == 0){
@@ -205,7 +204,7 @@ void MainWindow::solveSudokuVisual(){
     fertig = true;
 }
 
-void MainWindow::getValues(){
+void MainWindow::getValues(){       // holt die zahlen aus den fledern und speichert sie ins array zahlen
     for (int i=0;i<9;i++) {
         for (int j=0;j<9;j++) {
             zahlen[i][j] = fields[i][j]->text().toInt();
@@ -214,7 +213,7 @@ void MainWindow::getValues(){
 }
 
 
-void MainWindow::createSudoku(int difficulty){
+void MainWindow::createSudoku(int difficulty){      //erstellt ein sudoku mit hilfe von solveSudoku
     clearZahlen();
 
     int x, y, n;
@@ -312,10 +311,11 @@ void MainWindow::on_solvevisual_clicked()
     solveSudokuVisual();
 }
 
-void MainWindow::clearZahlen(){
+void MainWindow::clearZahlen(){     //setzt das array zahlen auf 0 und die felder auf schreibbar
     for(int i = 0; i < 9; i++){
         for(int j = 0; j < 9; j++){
             zahlen[i][j] = 0;
+            fields[i][j]->setReadOnly(0);
         }
     }
 }
