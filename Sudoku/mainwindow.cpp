@@ -193,7 +193,7 @@ void MainWindow::solveSudokuVisual(){
                         solveSudokuVisual();
                         zahlen[y][x] = 0;
                         if(!fertig){
-                            fields[y][x] ->setText("0");
+                            fields[y][x] ->setText("");
                             qApp->processEvents();
                         }
                     }
@@ -240,8 +240,9 @@ void MainWindow::createSudoku(int difficulty){
 
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
-            fields[y][x] ->setText(QString::number(zahlen[y][x]));
+            fields[y][x] ->setText("");
             if(zahlen[y][x] != 0){
+                fields[y][x] ->setText(QString::number(zahlen[y][x]));
                 fields[y][x]->setStyleSheet("*{font-weight: bold;}");
                 fields[y][x]->setReadOnly(1);
             }
