@@ -6,9 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>630</width>
+    <height>500</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>630</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>630</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>Sudoku</string>
@@ -16,6 +31,9 @@
   <property name="windowIcon">
    <iconset resource="img.qrc">
     <normaloff>:/SudokuImg.png</normaloff>:/SudokuImg.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLineEdit" name="field_0_0">
@@ -32,6 +50,9 @@
     </property>
     <property name="inputMethodHints">
      <set>Qt::ImhNone</set>
+    </property>
+    <property name="frame">
+     <bool>true</bool>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -58,6 +79,10 @@
       <width>31</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -1077,19 +1102,6 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="closebtn">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>410</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Close</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="solve">
     <property name="geometry">
      <rect>
@@ -1171,8 +1183,8 @@
    <widget class="QPushButton" name="solvevisual">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>450</y>
+      <x>340</x>
+      <y>410</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -1187,7 +1199,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>630</width>
      <height>21</height>
     </rect>
    </property>

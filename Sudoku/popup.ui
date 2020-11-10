@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
-    <height>227</height>
+    <width>391</width>
+    <height>196</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>391</width>
+    <height>196</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>391</width>
+    <height>196</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Bewertung</string>
@@ -26,6 +38,12 @@
       <width>291</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>16</pointsize>
+     </font>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -50,7 +68,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>415</width>
+     <width>391</width>
      <height>21</height>
     </rect>
    </property>

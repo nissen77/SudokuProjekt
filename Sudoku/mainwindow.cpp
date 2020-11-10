@@ -109,42 +109,17 @@ MainWindow::MainWindow(QWidget *parent)
             fields[i][j]->setValidator(validator);
         }
     }
-    getValues();
     createSudoku(50);
+    getValues();
 }
 
-bool MainWindow::pruefeFeld(int x, int y, int n){   //ueberprueft ob in ein bestimmtes feld eine bestimmte zahl geschrieben werden kann
-    for(int i = 0; i < 9; i++){
-        if(zahlen[y][i] == n &&  x != i){
-            return false;
-        }
-        if(zahlen[i][x]== n && y != i){
-            return false;
-        }
-    }
+// Haupt Funktionen
 
-    int px = x%3;
-    int py = y%3;
-    int xq = (x/3)*3;
-    int yq = (y/3)*3;
-
-
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if(n == zahlen[yq+i][xq+j] && i!=py && j != px){
-                return false;
-            }
-        }
-    }
-    return true;
-
-}
-
-bool MainWindow::pruefSudoku(){       //prueft ob das sudoku richtig geloest wurde
+bool MainWindow::checkSudoku(){       //prueft ob das sudoku richtig geloest wurde
     getValues();
     for(int y = 0; y < 9; y++){
         for(int x = 0; x < 9; x++){
-            if(pruefeFeld(x, y, zahlen[y][x]) == 0){
+            if(checkField(x, y, zahlen[y][x]) == 0 || zahlen[y][x] == 0){
                 return false;
             }
         }
@@ -152,12 +127,12 @@ bool MainWindow::pruefSudoku(){       //prueft ob das sudoku richtig geloest wur
     return true;
 }
 
-void MainWindow::solveSudoku(){        //loest das sudoku
-    for(int y = 0; y < 9; y++) {
+void MainWindow::solveSudoku(){        // loest das sudoku mit Hilfe der brute force methode
+    for(int y = 0; y < 9; y++) {       // solveSudoku nimmt keine Ruecksicht auf Benutzereingaben und loescht dies beim loesen raus
         for(int x = 0; x < 9; x++) {
             if(zahlen[y][x] == 0){
                 for(int n = 1; n < 10 ;n++) {
-                    if(pruefeFeld(x, y, n) && !fertig){
+                    if(checkField(x, y, n) && !fertig){
                         zahlen[y][x] = n;
                         solveSudoku();
                         zahlen[y][x] = 0;
@@ -177,12 +152,12 @@ void MainWindow::solveSudoku(){        //loest das sudoku
     fertig = true;
 }
 
-void MainWindow::solveSudokuVisual(){       //loest das sudoku sichtbar fuer die ui
+void MainWindow::solveSudokuVisual(){       //loest das sudoku sichtbar fuer den Benutzer
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             if(zahlen[y][x] == 0){
                 for(int n = 1; n < 10 ;n++) {
-                    if(pruefeFeld(x, y, n) && !fertig){
+                    if(checkField(x, y, n) && !fertig){
                         zahlen[y][x] = n;
                         Sleep(250);
                         fields[y][x]->setStyleSheet("*{color : blue; font-weight: 900; font-size:15px;}");
@@ -204,14 +179,6 @@ void MainWindow::solveSudokuVisual(){       //loest das sudoku sichtbar fuer die
     fertig = true;
 }
 
-void MainWindow::getValues(){       // holt die zahlen aus den fledern und speichert sie ins array zahlen
-    for (int i=0;i<9;i++) {
-        for (int j=0;j<9;j++) {
-            zahlen[i][j] = fields[i][j]->text().toInt();
-        }
-    }
-}
-
 
 void MainWindow::createSudoku(int difficulty){      //erstellt ein sudoku mit hilfe von solveSudoku
     clearZahlen();
@@ -221,7 +188,7 @@ void MainWindow::createSudoku(int difficulty){      //erstellt ein sudoku mit hi
         x = (rand()%9);
         y = (rand()%9);
         n = (rand()%9)+1;
-        if(pruefeFeld(x, y, n)){
+        if(checkField(x, y, n)){
             zahlen[y][x] = n;
         }else i--;
     }
@@ -249,30 +216,69 @@ void MainWindow::createSudoku(int difficulty){      //erstellt ein sudoku mit hi
     }
 }
 
+// Hilfs Funktionen
+
+void MainWindow::getValues(){       // holt die zahlen aus den fledern und speichert sie ins array zahlen
+    for (int i=0;i<9;i++) {
+        for (int j=0;j<9;j++) {
+            zahlen[i][j] = fields[i][j]->text().toInt();
+        }
+    }
+}
+
+bool MainWindow::checkField(int x, int y, int n){   //ueberprueft ob in ein bestimmtes feld eine bestimmte zahl geschrieben werden kann
+    for(int i = 0; i < 9; i++){
+        if(zahlen[y][i] == n &&  x != i){
+            return false;
+        }
+        if(zahlen[i][x]== n && y != i){
+            return false;
+        }
+    }
+
+    int px = x%3;
+    int py = y%3;
+    int xq = (x/3)*3;
+    int yq = (y/3)*3;
+
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if(n == zahlen[yq+i][xq+j] && i!=py && j != px){
+                return false;
+            }
+        }
+    }
+    return true;
+
+}
+
+void MainWindow::clearZahlen(){     //setzt das array zahlen auf 0 und die felder auf schreibbar
+    for(int i = 0; i < 9; i++){
+        for(int j = 0; j < 9; j++){
+            zahlen[i][j] = 0;
+            fields[i][j]->setReadOnly(0);
+        }
+    }
+}
+
+// Buttons
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-
-
-void MainWindow::on_closebtn_clicked()
-{
-    close();
-}
-
 void MainWindow::on_solve_clicked()
 {
     fertig = false;
-    getValues();
     solveSudoku();
 }
 
 void MainWindow::on_check_clicked()
 {
-    if(pruefSudoku()){
-        popup->setPopUpText("Gelöst");
+    if(checkSudoku()){
+        popup->setPopUpText("Gelöst");               //ruft das PopUp fenster mit entsprechender meldung auf
     }else{
         popup->setPopUpText("Nicht Gelöst");
     }
@@ -307,15 +313,5 @@ void MainWindow::on_sehrschwer_clicked()
 void MainWindow::on_solvevisual_clicked()
 {
     fertig = false;
-    getValues();
     solveSudokuVisual();
-}
-
-void MainWindow::clearZahlen(){     //setzt das array zahlen auf 0 und die felder auf schreibbar
-    for(int i = 0; i < 9; i++){
-        for(int j = 0; j < 9; j++){
-            zahlen[i][j] = 0;
-            fields[i][j]->setReadOnly(0);
-        }
-    }
 }

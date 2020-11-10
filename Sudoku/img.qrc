@@ -1,6 +1,8 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-<qresource prefix="/">
+<RCC>
+    <qresource prefix="/">
         <file>SudokuImg.png</file>
-</qresource>
+    </qresource>
+    <qresource prefix="/css">
+        <file>style.css</file>
+    </qresource>
 </RCC>

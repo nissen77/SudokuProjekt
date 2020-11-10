@@ -19,8 +19,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     QLineEdit *fields[9][9];
     int zahlen [9][9];
-    bool pruefeFeld(int x, int y, int n);
-    bool pruefSudoku();
+    bool checkField(int x, int y, int n);
+    bool checkSudoku();
     void solveSudoku();
     void solveSudokuVisual();
     void getValues();
@@ -33,7 +33,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_closebtn_clicked();
 
     void on_solve_clicked();
 
