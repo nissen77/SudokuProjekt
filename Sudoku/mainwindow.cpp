@@ -10,9 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    popup = new PopUp();              // erzeugen des popup window objekts
+    popup = new PopUp();
 
-    fields[0][0] = ui->field_0_0;     // weist dem array fields die ui pointer zu
+    // weist dem array fields die ui pointer zu
+    fields[0][0] = ui->field_0_0;
     fields[0][1] = ui->field_0_1;
     fields[0][2] = ui->field_0_2;
     fields[0][3] = ui->field_0_3;
@@ -113,9 +114,12 @@ MainWindow::MainWindow(QWidget *parent)
     getValues();
 }
 
-// Haupt Funktionen
+/* ================================================================================================
+* Haupt Funktionen
+*/
 
-bool MainWindow::checkSudoku(){       //prueft ob das sudoku richtig geloest wurde
+//prueft ob das sudoku richtig geloest wurde
+bool MainWindow::checkSudoku(){
     getValues();
     for(int y = 0; y < 9; y++){
         for(int x = 0; x < 9; x++){
@@ -127,8 +131,13 @@ bool MainWindow::checkSudoku(){       //prueft ob das sudoku richtig geloest wur
     return true;
 }
 
-void MainWindow::solveSudoku(){        // loest das sudoku mit Hilfe der brute force methode
-    for(int y = 0; y < 9; y++) {       // solveSudoku nimmt keine Ruecksicht auf Benutzereingaben und loescht dies beim loesen raus
+/*
+* loest das sudoku mit Hilfe der brute force methode
+*solveSudoku nimmt keine Ruecksicht auf Benutzereingaben und loescht dies beim loesen raus
+*/
+void MainWindow::solveSudoku(){
+    //0) Durchläuft das Sudokufeld bis es die Zahl 0 gefunden hat und setzt dann mit der Hilfsfunktion checkField eine gültige Zahl ein
+    for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             if(zahlen[y][x] == 0){
                 for(int n = 1; n < 10 ;n++) {
@@ -143,6 +152,8 @@ void MainWindow::solveSudoku(){        // loest das sudoku mit Hilfe der brute f
         }
     }
 
+    //1) Nach dem Vollständigen durchlaufen des Sudokufeldes werden die Zahlen in die UI eingesetzt.
+    // Wenn das Sudoku nicht gelöst wurde, bleibt der Ausgangszustand erhalten
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             fields[y][x] ->setText(QString::number(zahlen[y][x]));
@@ -152,7 +163,9 @@ void MainWindow::solveSudoku(){        // loest das sudoku mit Hilfe der brute f
     fertig = true;
 }
 
-void MainWindow::solveSudokuVisual(){       //loest das sudoku sichtbar fuer den Benutzer
+//loest das sudoku sichtbar fuer den Benutzer
+// gleiches vorgehen wie bei solveSudoku, nur dass die Zahlen sofort in die UI eingetragen werden
+void MainWindow::solveSudokuVisual(){
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             if(zahlen[y][x] == 0){
@@ -179,10 +192,12 @@ void MainWindow::solveSudokuVisual(){       //loest das sudoku sichtbar fuer den
     fertig = true;
 }
 
-
-void MainWindow::createSudoku(int difficulty){      //erstellt ein sudoku mit hilfe von solveSudoku
+// erstellt ein Sudoku mit Hilfe von solveSudoku
+// int difficulty gibt an wie viele Werte aus dem Sudoku gelöscht werden
+void MainWindow::createSudoku(int difficulty){
     clearZahlen();
 
+    //0) setzt in das Array zahlen elf zufällig richtige Zahlen ein.
     int x, y, n;
     for(int i = 0; i < 11; i++){
         x = (rand()%9);
@@ -193,8 +208,10 @@ void MainWindow::createSudoku(int difficulty){      //erstellt ein sudoku mit hi
         }else i--;
     }
 
+    //1) läst das Array zahlen lösen.
     solveSudoku();
     getValues();
+    // löscht je nach Schwierigkeitsgrad eine feste Menge an Werten zufällig heraus
     for(int i = 0; i < difficulty; i++){
         x = (rand()%9);
         y = (rand()%9);
@@ -204,6 +221,7 @@ void MainWindow::createSudoku(int difficulty){      //erstellt ein sudoku mit hi
         }else i--;
     }
 
+    //2) überträgt das neu erstellte Sudoku in die UI
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             fields[y][x] ->setText("");
@@ -216,9 +234,12 @@ void MainWindow::createSudoku(int difficulty){      //erstellt ein sudoku mit hi
     }
 }
 
-// Hilfs Funktionen
+/* ============================================================================================
+ *Hilfs Funktionen
+*/
 
-void MainWindow::getValues(){       // holt die zahlen aus den fledern und speichert sie ins array zahlen
+// holt die zahlen aus den UI feldern und speichert sie ins array zahlen
+void MainWindow::getValues(){
     for (int i=0;i<9;i++) {
         for (int j=0;j<9;j++) {
             zahlen[i][j] = fields[i][j]->text().toInt();
@@ -226,7 +247,9 @@ void MainWindow::getValues(){       // holt die zahlen aus den fledern und speic
     }
 }
 
-bool MainWindow::checkField(int x, int y, int n){   //ueberprueft ob in ein bestimmtes feld eine bestimmte zahl geschrieben werden kann
+// prüft die gültig keit einer Zahl für das gewählte Feld
+bool MainWindow::checkField(int x, int y, int n){
+    // prüft ob die Übergebene Zahl in der Ausgewählten x-Achse oder y-Achse schon vorhanden ist
     for(int i = 0; i < 9; i++){
         if(zahlen[y][i] == n &&  x != i){
             return false;
@@ -236,15 +259,17 @@ bool MainWindow::checkField(int x, int y, int n){   //ueberprueft ob in ein best
         }
     }
 
-    int px = x%3;
-    int py = y%3;
-    int xq = (x/3)*3;
-    int yq = (y/3)*3;
+    // bestimmt die Position im 3x3 Block
+    int xPosInBlock = x%3;
+    int yPosInBlock = y%3;
+    // bestimmt in welchen 3x3 Block sich der Wert befindet
+    int xPosBlock = (x/3)*3;
+    int yPosBlock = (y/3)*3;
 
-
+    // prüft ob in dem bestimmten 3x3 Block die Zahl bereits vorhanden ist
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            if(n == zahlen[yq+i][xq+j] && i!=py && j != px){
+            if(n == zahlen[yPosBlock+i][xPosBlock+j] && i!=yPosInBlock && j != xPosInBlock){
                 return false;
             }
         }
@@ -253,7 +278,8 @@ bool MainWindow::checkField(int x, int y, int n){   //ueberprueft ob in ein best
 
 }
 
-void MainWindow::clearZahlen(){     //setzt das array zahlen auf 0 und die felder auf schreibbar
+//setzt das Array zahlen auf 0 und die UI Felder auf schreibbar
+void MainWindow::clearZahlen(){
     for(int i = 0; i < 9; i++){
         for(int j = 0; j < 9; j++){
             zahlen[i][j] = 0;
@@ -262,7 +288,9 @@ void MainWindow::clearZahlen(){     //setzt das array zahlen auf 0 und die felde
     }
 }
 
-// Buttons
+/* =================================================================================================
+* Buttons
+*/
 
 MainWindow::~MainWindow()
 {
@@ -278,7 +306,7 @@ void MainWindow::on_solve_clicked()
 void MainWindow::on_check_clicked()
 {
     if(checkSudoku()){
-        popup->setPopUpText("Gelöst");               //ruft das PopUp fenster mit entsprechender meldung auf
+        popup->setPopUpText("Gelöst");
     }else{
         popup->setPopUpText("Nicht Gelöst");
     }

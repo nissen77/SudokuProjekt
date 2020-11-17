@@ -14,9 +14,11 @@ class PopUp : public QMainWindow
 public:
     explicit PopUp(QWidget *parent = nullptr);
     ~PopUp();
+    // Funktion zum Text setzten
     void setPopUpText(const QString text);
 
 private slots:
+    // event handler für UI elemente
     void on_pushButton_clicked();
 
 private:
