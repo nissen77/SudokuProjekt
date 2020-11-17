@@ -35,3 +35,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     img.qrc
+
+# DesktopIcon
+win32:RC_ICONS += SudokuImg.ico
