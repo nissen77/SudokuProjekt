@@ -124,7 +124,7 @@ bool MainWindow::checkSudoku(){
     getValues();
     for(int y = 0; y < 9; y++){
         for(int x = 0; x < 9; x++){
-            if(checkField(x, y, zahlen[y][x]) == 0 || zahlen[y][x] == 0){
+            if(checkField(x, y, numbers[y][x]) == 0 || numbers[y][x] == 0){
                 return false;
             }
         }
@@ -139,12 +139,12 @@ void MainWindow::solveSudoku(){
     //0) Durchläuft das Sudokufeld bis es die Zahl 0 gefunden hat und setzt dann mit der Hilfsfunktion checkField eine gültige Zahl ein
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
-            if(zahlen[y][x] == 0){
+            if(numbers[y][x] == 0){
                 for(int n = 1; n < 10 ;n++) {
-                    if(checkField(x, y, n) && !fertig){
-                        zahlen[y][x] = n;
+                    if(checkField(x, y, n) && !finished){
+                        numbers[y][x] = n;
                         solveSudoku();
-                        zahlen[y][x] = 0;
+                        numbers[y][x] = 0;
                     }
                 }
                 return;
@@ -156,11 +156,11 @@ void MainWindow::solveSudoku(){
     // Falls das Sudoku nicht gelöst werden kann, bleibt der Ausgangszustand erhalten
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
-            fields[y][x] ->setText(QString::number(zahlen[y][x]));
+            fields[y][x] ->setText(QString::number(numbers[y][x]));
         }
     }
 
-    fertig = true;
+    finished = true;
 }
 
 // löst das sudoku sichtbar für den Benutzer
@@ -168,18 +168,18 @@ void MainWindow::solveSudoku(){
 void MainWindow::solveSudokuVisual(){
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
-            if(zahlen[y][x] == 0){
+            if(numbers[y][x] == 0){
                 for(int n = 1; n < 10 ;n++) {
-                    if(checkField(x, y, n) && !fertig){
-                        zahlen[y][x] = n;
+                    if(checkField(x, y, n) && !finished){
+                        numbers[y][x] = n;
                         Sleep(250);
                         fields[y][x]->setStyleSheet("*{color : blue; font-weight: 900; font-size:15px;}");
-                        fields[y][x] ->setText(QString::number(zahlen[y][x]));
+                        fields[y][x] ->setText(QString::number(numbers[y][x]));
                         qApp->processEvents();
                         fields[y][x]->setStyleSheet("*{color:black; font-weight: normal; font-size:medium;}");
                         solveSudokuVisual();
-                        zahlen[y][x] = 0;
-                        if(!fertig){
+                        numbers[y][x] = 0;
+                        if(!finished){
                             fields[y][x] ->setText("");
                             qApp->processEvents();
                         }
@@ -189,13 +189,13 @@ void MainWindow::solveSudokuVisual(){
             }
         }
     }
-    fertig = true;
+    finished = true;
 }
 
 // erstellt ein Sudoku mit Hilfe von solveSudoku
 // int difficulty gibt an wie viele Werte aus dem Sudoku gelöscht werden
 void MainWindow::createSudoku(int difficulty){
-    clearZahlen();
+    clearNumbers();
 
     //0) setzt in das Array zahlen elf zufällig richtige Zahlen ein.
     int x, y, n;
@@ -204,7 +204,7 @@ void MainWindow::createSudoku(int difficulty){
         y = (rand()%9);
         n = (rand()%9)+1;
         if(checkField(x, y, n)){
-            zahlen[y][x] = n;
+            numbers[y][x] = n;
         }else i--;
     }
 
@@ -215,8 +215,8 @@ void MainWindow::createSudoku(int difficulty){
     for(int i = 0; i < difficulty; i++){
         x = (rand()%9);
         y = (rand()%9);
-        if(zahlen[y][x] != 0){
-            zahlen[y][x] = 0;
+        if(numbers[y][x] != 0){
+            numbers[y][x] = 0;
             fields[y][x]->setStyleSheet("*{font-weight: normal;}");
         }else i--;
     }
@@ -225,8 +225,8 @@ void MainWindow::createSudoku(int difficulty){
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             fields[y][x] ->setText("");
-            if(zahlen[y][x] != 0){
-                fields[y][x] ->setText(QString::number(zahlen[y][x]));
+            if(numbers[y][x] != 0){
+                fields[y][x] ->setText(QString::number(numbers[y][x]));
                 fields[y][x]->setStyleSheet("*{font-weight: bold;}");
                 fields[y][x]->setReadOnly(1);
             }
@@ -238,11 +238,11 @@ void MainWindow::createSudoku(int difficulty){
  *Hilfs Funktionen
 */
 
-// holt die zahlen aus den UI feldern und speichert sie ins array zahlen
+// holt die zahlen aus den UI feldern und speichert sie ins array numbers
 void MainWindow::getValues(){
     for (int i=0;i<9;i++) {
         for (int j=0;j<9;j++) {
-            zahlen[i][j] = fields[i][j]->text().toInt();
+            numbers[i][j] = fields[i][j]->text().toInt();
         }
     }
 }
@@ -251,10 +251,10 @@ void MainWindow::getValues(){
 bool MainWindow::checkField(int x, int y, int n){
     // prüft ob die Übergebene Zahl in der Ausgewählten x-Achse oder y-Achse schon vorhanden ist
     for(int i = 0; i < 9; i++){
-        if(zahlen[y][i] == n &&  x != i){
+        if(numbers[y][i] == n &&  x != i){
             return false;
         }
-        if(zahlen[i][x]== n && y != i){
+        if(numbers[i][x]== n && y != i){
             return false;
         }
     }
@@ -269,7 +269,7 @@ bool MainWindow::checkField(int x, int y, int n){
     // prüft ob in dem bestimmten 3x3 Block die Zahl bereits vorhanden ist
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            if(n == zahlen[yPosBlock+i][xPosBlock+j] && i!=yPosInBlock && j != xPosInBlock){
+            if(n == numbers[yPosBlock+i][xPosBlock+j] && i!=yPosInBlock && j != xPosInBlock){
                 return false;
             }
         }
@@ -278,11 +278,11 @@ bool MainWindow::checkField(int x, int y, int n){
 
 }
 
-//setzt alle Werte des Array zahlen auf 0 und die UI Felder auf schreibbar
-void MainWindow::clearZahlen(){
+//setzt alle Werte des Array numbers auf 0 und die UI Felder auf schreibbar
+void MainWindow::clearNumbers(){
     for(int i = 0; i < 9; i++){
         for(int j = 0; j < 9; j++){
-            zahlen[i][j] = 0;
+            numbers[i][j] = 0;
             fields[i][j]->setReadOnly(0);
         }
     }
@@ -299,7 +299,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_solve_clicked()
 {
-    fertig = false;
+    finished = false;
     solveSudoku();
 }
 
@@ -316,30 +316,30 @@ void MainWindow::on_check_clicked()
 
 void MainWindow::on_leicht_clicked()
 {
-    fertig = false;
+    finished = false;
     createSudoku(48);
 }
 
 void MainWindow::on_normal_clicked()
 {
-    fertig = false;
+    finished = false;
     createSudoku(52);
 }
 
 void MainWindow::on_schwer_clicked()
 {
-    fertig = false;
+    finished = false;
     createSudoku(56);
 }
 
 void MainWindow::on_sehrschwer_clicked()
 {
-    fertig = false;
+    finished = false;
     createSudoku(60);
 }
 
 void MainWindow::on_solvevisual_clicked()
 {
-    fertig = false;
+    finished = false;
     solveSudokuVisual();
 }

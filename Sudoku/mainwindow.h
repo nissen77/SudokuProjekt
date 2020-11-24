@@ -18,8 +18,8 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QLineEdit *fields[9][9];
-    int zahlen [9][9];
-    bool fertig = false;
+    int numbers [9][9];
+    bool finished = false;
     // Funktionen zum lösen des Sudokus
     bool checkField(int x, int y, int n);
     bool checkSudoku();
@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow
     void solveSudokuVisual();
     void getValues();
     void createSudoku(int difficulty);
-    void clearZahlen();
+    void clearNumbers();
 
 public:
     MainWindow(QWidget *parent = nullptr);
