@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     popup = new PopUp();
 
-    // weist dem array fields die ui pointer zu
+    // Weist dem array fields die ui pointer zu
     fields[0][0] = ui->field_0_0;
     fields[0][1] = ui->field_0_1;
     fields[0][2] = ui->field_0_2;
@@ -103,14 +103,15 @@ MainWindow::MainWindow(QWidget *parent)
     fields[8][7] = ui->field_8_7;
     fields[8][8] = ui->field_8_8;
 
-    QRegExp re("[1-9]");                //Regex damit in die ui felder nur zahlen von 1-9 eingetragen werden koennen
+    // Regex damit in die ui felder nur zahlen von 1-9 eingetragen werden koennen
+    QRegExp re("[1-9]");
     QRegExpValidator *validator = new QRegExpValidator(re, this);
     for (int i=0;i<9;i++) {
         for (int j=0;j<9;j++) {
             fields[i][j]->setValidator(validator);
         }
     }
-    createSudoku(50);
+    createSudoku(48);
     getValues();
 }
 
@@ -118,7 +119,7 @@ MainWindow::MainWindow(QWidget *parent)
 * Haupt Funktionen
 */
 
-//prueft ob das sudoku richtig geloest wurde
+// prüft ob das sudoku gelöst wurde
 bool MainWindow::checkSudoku(){
     getValues();
     for(int y = 0; y < 9; y++){
@@ -132,8 +133,7 @@ bool MainWindow::checkSudoku(){
 }
 
 /*
-* loest das sudoku mit Hilfe der brute force methode
-*solveSudoku nimmt keine Ruecksicht auf Benutzereingaben und loescht dies beim loesen raus
+* solveSudoku nimmt keine Rücksicht auf Benutzereingaben und löscht dies beim lösen raus
 */
 void MainWindow::solveSudoku(){
     //0) Durchläuft das Sudokufeld bis es die Zahl 0 gefunden hat und setzt dann mit der Hilfsfunktion checkField eine gültige Zahl ein
@@ -153,7 +153,7 @@ void MainWindow::solveSudoku(){
     }
 
     //1) Nach dem Vollständigen durchlaufen des Sudokufeldes werden die Zahlen in die UI eingesetzt.
-    // Wenn das Sudoku nicht gelöst wurde, bleibt der Ausgangszustand erhalten
+    // Falls das Sudoku nicht gelöst werden kann, bleibt der Ausgangszustand erhalten
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             fields[y][x] ->setText(QString::number(zahlen[y][x]));
@@ -163,7 +163,7 @@ void MainWindow::solveSudoku(){
     fertig = true;
 }
 
-//loest das sudoku sichtbar fuer den Benutzer
+// löst das sudoku sichtbar für den Benutzer
 // gleiches vorgehen wie bei solveSudoku, nur dass die Zahlen sofort in die UI eingetragen werden
 void MainWindow::solveSudokuVisual(){
     for(int y = 0; y < 9; y++) {
@@ -247,7 +247,7 @@ void MainWindow::getValues(){
     }
 }
 
-// prüft die gültig keit einer Zahl für das gewählte Feld
+// prüft die gültigkeit einer Zahl für das gewählte Feld
 bool MainWindow::checkField(int x, int y, int n){
     // prüft ob die Übergebene Zahl in der Ausgewählten x-Achse oder y-Achse schon vorhanden ist
     for(int i = 0; i < 9; i++){
@@ -278,7 +278,7 @@ bool MainWindow::checkField(int x, int y, int n){
 
 }
 
-//setzt das Array zahlen auf 0 und die UI Felder auf schreibbar
+//setzt alle Werte des Array zahlen auf 0 und die UI Felder auf schreibbar
 void MainWindow::clearZahlen(){
     for(int i = 0; i < 9; i++){
         for(int j = 0; j < 9; j++){
