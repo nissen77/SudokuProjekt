@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     popup = new PopUp();
 
-    // Weist dem array fields die ui pointer zu
+    // assigns the ui pointer to the array fields
     fields[0][0] = ui->field_0_0;
     fields[0][1] = ui->field_0_1;
     fields[0][2] = ui->field_0_2;
@@ -103,7 +103,8 @@ MainWindow::MainWindow(QWidget *parent)
     fields[8][7] = ui->field_8_7;
     fields[8][8] = ui->field_8_8;
 
-    // Regex damit in die ui felder nur zahlen von 1-9 eingetragen werden koennen
+    // restricts input
+    // only numbers from 1-9
     QRegExp re("[1-9]");
     QRegExpValidator *validator = new QRegExpValidator(re, this);
     for (int i=0;i<9;i++) {
@@ -116,10 +117,10 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 /* ================================================================================================
-* Haupt Funktionen
+* main functions
 */
 
-// prüft ob das sudoku gelöst wurde
+// checks if the Sudoku is solved
 bool MainWindow::checkSudoku(){
     getValues();
     for(int y = 0; y < 9; y++){
@@ -133,10 +134,10 @@ bool MainWindow::checkSudoku(){
 }
 
 /*
-* solveSudoku nimmt keine Rücksicht auf Benutzereingaben und löscht dies beim lösen raus
+* solveSudoku does not regard user input
 */
 void MainWindow::solveSudoku(){
-    //0) Durchläuft das Sudokufeld bis es die Zahl 0 gefunden hat und setzt dann mit der Hilfsfunktion checkField eine gültige Zahl ein
+    //0) itterates over the array numbers until a 0 is found. It then uses checkFields to find a valid number
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             if(numbers[y][x] == 0){
@@ -152,8 +153,7 @@ void MainWindow::solveSudoku(){
         }
     }
 
-    //1) Nach dem Vollständigen durchlaufen des Sudokufeldes werden die Zahlen in die UI eingesetzt.
-    // Falls das Sudoku nicht gelöst werden kann, bleibt der Ausgangszustand erhalten
+    //1) after going throug the whole array the numbers are transfered into the UI
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             fields[y][x] ->setText(QString::number(numbers[y][x]));
@@ -163,8 +163,8 @@ void MainWindow::solveSudoku(){
     finished = true;
 }
 
-// löst das sudoku sichtbar für den Benutzer
-// gleiches vorgehen wie bei solveSudoku, nur dass die Zahlen sofort in die UI eingetragen werden
+// solves the sudoku visual for the user
+// same method as in solveSudoku, except that the numbers are directly written into the UI
 void MainWindow::solveSudokuVisual(){
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
@@ -192,12 +192,12 @@ void MainWindow::solveSudokuVisual(){
     finished = true;
 }
 
-// erstellt ein Sudoku mit Hilfe von solveSudoku
-// int difficulty gibt an wie viele Werte aus dem Sudoku gelöscht werden
+// creates a sudoku with the help of solveSudoku
+// int difficulty indicates how many numbers are removed from the sudoku
 void MainWindow::createSudoku(int difficulty){
     clearNumbers();
 
-    //0) setzt in das Array zahlen elf zufällig richtige Zahlen ein.
+    //0) places 11 random numbers into the array numbers (the random numbers get validated)
     int x, y, n;
     for(int i = 0; i < 11; i++){
         x = (rand()%9);
@@ -208,10 +208,10 @@ void MainWindow::createSudoku(int difficulty){
         }else i--;
     }
 
-    //1) läst das Array zahlen lösen.
+    //1) the sudoku gets solved and the values are written into the array numbers
     solveSudoku();
     getValues();
-    // löscht je nach Schwierigkeitsgrad eine feste Menge an Werten zufällig heraus
+    // deletes depending on the difficulty a fixed number of elements from the array
     for(int i = 0; i < difficulty; i++){
         x = (rand()%9);
         y = (rand()%9);
@@ -221,7 +221,7 @@ void MainWindow::createSudoku(int difficulty){
         }else i--;
     }
 
-    //2) überträgt das neu erstellte Sudoku in die UI
+    //2) transfers the newly created array into the ui
     for(int y = 0; y < 9; y++) {
         for(int x = 0; x < 9; x++) {
             fields[y][x] ->setText("");
@@ -235,10 +235,10 @@ void MainWindow::createSudoku(int difficulty){
 }
 
 /* ============================================================================================
- *Hilfs Funktionen
+ *helper functions
 */
 
-// holt die zahlen aus den UI feldern und speichert sie ins array numbers
+// gets the value from the UI and saves them in the array numbers
 void MainWindow::getValues(){
     for (int i=0;i<9;i++) {
         for (int j=0;j<9;j++) {
@@ -247,9 +247,9 @@ void MainWindow::getValues(){
     }
 }
 
-// prüft die gültigkeit einer Zahl für das gewählte Feld
+// validates if a given numbers is valid for the given field
 bool MainWindow::checkField(int x, int y, int n){
-    // prüft ob die Übergebene Zahl in der Ausgewählten x-Achse oder y-Achse schon vorhanden ist
+    // checks if the given numbers is contained in the x-axis or y-axis
     for(int i = 0; i < 9; i++){
         if(numbers[y][i] == n &&  x != i){
             return false;
@@ -259,14 +259,14 @@ bool MainWindow::checkField(int x, int y, int n){
         }
     }
 
-    // bestimmt die Position im 3x3 Block
+    // determines the position in the 3x3 block
     int xPosInBlock = x%3;
     int yPosInBlock = y%3;
-    // bestimmt in welchen 3x3 Block sich der Wert befindet
+    // determines in wich 3x3 block the value is contained
     int xPosBlock = (x/3)*3;
     int yPosBlock = (y/3)*3;
 
-    // prüft ob in dem bestimmten 3x3 Block die Zahl bereits vorhanden ist
+    // checks if the given number exists in the 3x3 block
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if(n == numbers[yPosBlock+i][xPosBlock+j] && i!=yPosInBlock && j != xPosInBlock){
@@ -278,7 +278,7 @@ bool MainWindow::checkField(int x, int y, int n){
 
 }
 
-//setzt alle Werte des Array numbers auf 0 und die UI Felder auf schreibbar
+// sets the value of the array number to 0 and makes the UI fields writable again
 void MainWindow::clearNumbers(){
     for(int i = 0; i < 9; i++){
         for(int j = 0; j < 9; j++){
@@ -289,7 +289,7 @@ void MainWindow::clearNumbers(){
 }
 
 /* =================================================================================================
-* Buttons
+* buttons
 */
 
 MainWindow::~MainWindow()

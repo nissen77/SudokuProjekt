@@ -18,9 +18,11 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QLineEdit *fields[9][9];
+    // serves as storage for the UI values
     int numbers [9][9];
+    // indicates if the sudoku got solved by solveSudoku
     bool finished = false;
-    // Funktionen zum lösen des Sudokus
+    // functions for solving the sudoku
     bool checkField(int x, int y, int n);
     bool checkSudoku();
     void solveSudoku();
@@ -35,7 +37,7 @@ public:
 
 private slots:
 
-    // event handler für UI elemente
+    // event handler for UI elementes
     void on_solve_clicked();
     void on_check_clicked();
     void on_leicht_clicked();

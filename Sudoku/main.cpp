@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     srand(time(NULL));
     QApplication a(argc, argv);
 
-    // einlesen der css datei
+    // reading in the css files
     QFile styleFile(":/css/style.css");
     if(styleFile.open(QIODevice::ReadOnly))
        {
